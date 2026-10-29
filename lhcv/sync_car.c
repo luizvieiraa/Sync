@@ -12,3 +12,19 @@ void station_init(struct station *station)
     station->assentos_disponiveis = 0;
     station->passageiros_embarcando = 0;
 }
+
+/* Aguarda uma vaga e a reserva antes de permitir o embarque. */
+void station_wait_for_car(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_esperando++;
+
+    while (station->assentos_disponiveis == 0) {
+        pthread_cond_wait(&station->carro_disponivel, &station->mutex);
+    }
+
+    station->assentos_disponiveis--;
+    station->passageiros_esperando--;
+    station->passageiros_embarcando++;
+    pthread_mutex_unlock(&station->mutex);
+}

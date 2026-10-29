@@ -56,3 +56,44 @@ void station_init(struct station *station)
 + gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
 
 Script done on 2026-10-28 22:15:37-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-10-28 22:27:54-03:00 [COMMAND="set -ex; date; printf etapa_2_espera_e_reserva; sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c; cat sync_car.c; gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c" <not executed on terminal>]
++ date
+Wed Oct 28 22:27:54 -03 2026
++ printf etapa_2_espera_e_reserva
+etapa_2_espera_e_reserva+ sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  /mnt/c/Users/luizv/Downloads/sync_car-runner.c
++ cat sync_car.c
+// SPDX-License-Identifier: GPL-3.0
+#include "sync_car.h"
+
+/* Inicializa uma estacao sem passageiros e sem assentos disponiveis. */
+void station_init(struct station *station)
+{
+    pthread_mutex_init(&station->mutex, NULL);
+    pthread_cond_init(&station->carro_disponivel, NULL);
+    pthread_cond_init(&station->embarque_concluido, NULL);
+
+    station->passageiros_esperando = 0;
+    station->assentos_disponiveis = 0;
+    station->passageiros_embarcando = 0;
+}
+
+/* Aguarda uma vaga e a reserva antes de permitir o embarque. */
+void station_wait_for_car(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_esperando++;
+
+    while (station->assentos_disponiveis == 0) {
+        pthread_cond_wait(&station->carro_disponivel, &station->mutex);
+    }
+
+    station->assentos_disponiveis--;
+    station->passageiros_esperando--;
+    station->passageiros_embarcando++;
+    pthread_mutex_unlock(&station->mutex);
+}
++ gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
+
+Script done on 2026-10-28 22:27:54-03:00 [COMMAND_EXIT_CODE="0"]
