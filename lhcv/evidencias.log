@@ -1,0 +1,58 @@
+Script started on 2026-10-28 22:15:27-03:00 [COMMAND="date; whoami; pwd; printf etapa_1_estrutura_e_inicializacao; gcc --version; make --version" <not executed on terminal>]
+Wed Oct 28 22:15:27 -03 2026
+luizv
+/mnt/c/Users/luizv/Desktop/sync/lhcv
+etapa_1_estrutura_e_inicializacaogcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+GNU Make 4.4.1
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Script done on 2026-10-28 22:15:27-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-10-28 22:15:37-03:00 [COMMAND="set -ex; date; cat sync_car.h sync_car.c; gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c" <not executed on terminal>]
++ date
+Wed Oct 28 22:15:37 -03 2026
++ cat sync_car.h sync_car.c
+#ifndef SYNC_CAR_H
+#define SYNC_CAR_H
+
+#include <pthread.h>
+
+struct station {
+    pthread_mutex_t mutex;
+    pthread_cond_t carro_disponivel;
+    pthread_cond_t embarque_concluido;
+    int passageiros_esperando;
+    int assentos_disponiveis;
+    int passageiros_embarcando;
+};
+
+void station_init(struct station *station);
+void station_load_car(struct station *station, int count);
+void station_wait_for_car(struct station *station);
+void station_on_board(struct station *station);
+
+#endif
+// SPDX-License-Identifier: GPL-3.0
+#include "sync_car.h"
+
+/* Inicializa uma estacao sem passageiros e sem assentos disponiveis. */
+void station_init(struct station *station)
+{
+    pthread_mutex_init(&station->mutex, NULL);
+    pthread_cond_init(&station->carro_disponivel, NULL);
+    pthread_cond_init(&station->embarque_concluido, NULL);
+
+    station->passageiros_esperando = 0;
+    station->assentos_disponiveis = 0;
+    station->passageiros_embarcando = 0;
+}
++ gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
+
+Script done on 2026-10-28 22:15:37-03:00 [COMMAND_EXIT_CODE="0"]
