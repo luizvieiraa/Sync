@@ -155,3 +155,97 @@ void station_on_board(struct station *station)
 + gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
 
 Script done on 2026-10-31 00:45:30-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-10-31 00:46:18-03:00 [COMMAND="set -ex; date; whoami; pwd; echo etapa_4_chegada_e_partida; cat sync_car.c; gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c; gcc -std=gnu11 -Wall -Wextra -pthread sync_car.c sync_car-runner.c -o sync_car; ./sync_car" <not executed on terminal>]
++ date
+Sat Oct 31 00:46:18 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo etapa_4_chegada_e_partida
+etapa_4_chegada_e_partida
++ cat sync_car.c
+// SPDX-License-Identifier: GPL-3.0
+#include "sync_car.h"
+
+/* Inicializa uma estacao sem passageiros e sem assentos disponiveis. */
+void station_init(struct station *station)
+{
+    pthread_mutex_init(&station->mutex, NULL);
+    pthread_cond_init(&station->carro_disponivel, NULL);
+    pthread_cond_init(&station->embarque_concluido, NULL);
+
+    station->passageiros_esperando = 0;
+    station->assentos_disponiveis = 0;
+    station->passageiros_embarcando = 0;
+}
+
+/* Aguarda uma vaga e a reserva antes de permitir o embarque. */
+void station_wait_for_car(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_esperando++;
+
+    while (station->assentos_disponiveis == 0) {
+        pthread_cond_wait(&station->carro_disponivel, &station->mutex);
+    }
+
+    station->assentos_disponiveis--;
+    station->passageiros_esperando--;
+    station->passageiros_embarcando++;
+    pthread_mutex_unlock(&station->mutex);
+}
+
+/* Confirma o embarque e avisa quando o carro pode encerrar a espera. */
+void station_on_board(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_embarcando--;
+
+    if (station->passageiros_embarcando == 0 &&
+        (station->assentos_disponiveis == 0 ||
+         station->passageiros_esperando == 0)) {
+        pthread_cond_signal(&station->embarque_concluido);
+    }
+
+    pthread_mutex_unlock(&station->mutex);
+}
+
+/* Disponibiliza vagas e aguarda a conclusao dos embarques autorizados. */
+void station_load_car(struct station *station, int count)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->assentos_disponiveis = count;
+    pthread_cond_broadcast(&station->carro_disponivel);
+
+    while (station->passageiros_embarcando > 0 ||
+           (station->assentos_disponiveis > 0 &&
+            station->passageiros_esperando > 0)) {
+        pthread_cond_wait(&station->embarque_concluido, &station->mutex);
+    }
+
+    station->assentos_disponiveis = 0;
+    pthread_mutex_unlock(&station->mutex);
+}
++ gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
++ gcc -std=gnu11 -Wall -Wextra -pthread sync_car.c sync_car-runner.c -o sync_car
+[01m[Ksync_car-runner.c:[m[K In function ‘[01m[Kalarm_handler[m[K’:
+[01m[Ksync_car-runner.c:54:24:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kfoo[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc-15.2.0/gcc/Warning-Options.html#index-Wno-unused-parameter-Wunused-parameter]8;;[m[K]
+   54 | void alarm_handler([01;35m[Kint foo[m[K)
+      |                    [01;35m[K~~~~^~~[m[K
++ ./sync_car
+car entering station with 49 free seats
+car departed station with 49 new passenger(s) (expected 49)
+car entering station with 11 free seats
+car departed station with 11 new passenger(s) (expected 11)
+car entering station with 4 free seats
+car departed station with 4 new passenger(s) (expected 4)
+car entering station with 4 free seats
+car departed station with 4 new passenger(s) (expected 4)
+car entering station with 8 free seats
+car departed station with 8 new passenger(s) (expected 8)
+car entering station with 40 free seats
+car departed station with 24 new passenger(s) (expected 24)
+Looks good!
+
+Script done on 2026-10-31 00:46:20-03:00 [COMMAND_EXIT_CODE="0"]

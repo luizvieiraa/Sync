@@ -43,3 +43,20 @@ void station_on_board(struct station *station)
 
     pthread_mutex_unlock(&station->mutex);
 }
+
+/* Disponibiliza vagas e aguarda a conclusao dos embarques autorizados. */
+void station_load_car(struct station *station, int count)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->assentos_disponiveis = count;
+    pthread_cond_broadcast(&station->carro_disponivel);
+
+    while (station->passageiros_embarcando > 0 ||
+           (station->assentos_disponiveis > 0 &&
+            station->passageiros_esperando > 0)) {
+        pthread_cond_wait(&station->embarque_concluido, &station->mutex);
+    }
+
+    station->assentos_disponiveis = 0;
+    pthread_mutex_unlock(&station->mutex);
+}
