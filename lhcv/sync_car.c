@@ -28,3 +28,18 @@ void station_wait_for_car(struct station *station)
     station->passageiros_embarcando++;
     pthread_mutex_unlock(&station->mutex);
 }
+
+/* Confirma o embarque e avisa quando o carro pode encerrar a espera. */
+void station_on_board(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_embarcando--;
+
+    if (station->passageiros_embarcando == 0 &&
+        (station->assentos_disponiveis == 0 ||
+         station->passageiros_esperando == 0)) {
+        pthread_cond_signal(&station->embarque_concluido);
+    }
+
+    pthread_mutex_unlock(&station->mutex);
+}

@@ -97,3 +97,61 @@ void station_wait_for_car(struct station *station)
 + gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
 
 Script done on 2026-10-28 22:27:54-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-10-31 00:45:30-03:00 [COMMAND="set -ex; date; whoami; pwd; echo etapa_3_confirmacao_de_embarque; cat sync_car.c; gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c" <not executed on terminal>]
++ date
+Sat Oct 31 00:45:30 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo etapa_3_confirmacao_de_embarque
+etapa_3_confirmacao_de_embarque
++ cat sync_car.c
+// SPDX-License-Identifier: GPL-3.0
+#include "sync_car.h"
+
+/* Inicializa uma estacao sem passageiros e sem assentos disponiveis. */
+void station_init(struct station *station)
+{
+    pthread_mutex_init(&station->mutex, NULL);
+    pthread_cond_init(&station->carro_disponivel, NULL);
+    pthread_cond_init(&station->embarque_concluido, NULL);
+
+    station->passageiros_esperando = 0;
+    station->assentos_disponiveis = 0;
+    station->passageiros_embarcando = 0;
+}
+
+/* Aguarda uma vaga e a reserva antes de permitir o embarque. */
+void station_wait_for_car(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_esperando++;
+
+    while (station->assentos_disponiveis == 0) {
+        pthread_cond_wait(&station->carro_disponivel, &station->mutex);
+    }
+
+    station->assentos_disponiveis--;
+    station->passageiros_esperando--;
+    station->passageiros_embarcando++;
+    pthread_mutex_unlock(&station->mutex);
+}
+
+/* Confirma o embarque e avisa quando o carro pode encerrar a espera. */
+void station_on_board(struct station *station)
+{
+    pthread_mutex_lock(&station->mutex);
+    station->passageiros_embarcando--;
+
+    if (station->passageiros_embarcando == 0 &&
+        (station->assentos_disponiveis == 0 ||
+         station->passageiros_esperando == 0)) {
+        pthread_cond_signal(&station->embarque_concluido);
+    }
+
+    pthread_mutex_unlock(&station->mutex);
+}
++ gcc -std=c11 -Wall -Wextra -Werror -pedantic -pthread -fsyntax-only sync_car.c
+
+Script done on 2026-10-31 00:45:30-03:00 [COMMAND_EXIT_CODE="0"]
