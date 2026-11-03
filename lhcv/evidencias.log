@@ -249,3 +249,47 @@ car departed station with 24 new passenger(s) (expected 24)
 Looks good!
 
 Script done on 2026-10-31 00:46:20-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-03 19:38:35-03:00 [COMMAND="set -ex; date; whoami; pwd; echo etapa_5_makefile_e_testes; make clean; make; timeout 30s make test; sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c" <not executed on terminal>]
++ date
+Tue Nov  3 19:38:35 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo etapa_5_makefile_e_testes
+etapa_5_makefile_e_testes
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
++ make
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread   -c -o sync_car.o sync_car.c
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -Wno-unused-parameter   -c -o sync_car-runner.o sync_car-runner.c
+cc   sync_car.o sync_car-runner.o  -pthread -o sync_car
++ timeout 30s make test
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -I. tests/test_station.c sync_car.o -pthread -o tests/test_station
+./sync_car
+car entering station with 5 free seats
+car departed station with 5 new passenger(s) (expected 5)
+car entering station with 15 free seats
+car departed station with 15 new passenger(s) (expected 15)
+car entering station with 10 free seats
+car departed station with 10 new passenger(s) (expected 10)
+car entering station with 43 free seats
+car departed station with 43 new passenger(s) (expected 43)
+car entering station with 43 free seats
+car departed station with 27 new passenger(s) (expected 27)
+Looks good!
+./tests/test_station
+OK: 1 passageiros, 1 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 4 passageiros, 4 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 3 passageiros, 8 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 8 passageiros, 3 vagas; confirmacoes retidas ate reservar todas as vagas
+Todos os testes adicionais passaram.
+sh tests/test_invalid.sh
+test_station: sync_car.c:52: station_load_car: Assertion `count >= 0' failed.
+Aborted
+OK: quantidade negativa rejeitada por assert (SIGABRT, retorno 134).
++ sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  /mnt/c/Users/luizv/Downloads/sync_car-runner.c
+
+Script done on 2026-11-03 19:38:39-03:00 [COMMAND_EXIT_CODE="0"]

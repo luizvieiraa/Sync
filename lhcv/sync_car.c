@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 #include "sync_car.h"
+#include <assert.h>
 
 /* Inicializa uma estacao sem passageiros e sem assentos disponiveis. */
 void station_init(struct station *station)
@@ -47,6 +48,8 @@ void station_on_board(struct station *station)
 /* Disponibiliza vagas e aguarda a conclusao dos embarques autorizados. */
 void station_load_car(struct station *station, int count)
 {
+    /* Uma quantidade negativa de assentos viola o contrato da funcao. */
+    assert(count >= 0);
     pthread_mutex_lock(&station->mutex);
     station->assentos_disponiveis = count;
     pthread_cond_broadcast(&station->carro_disponivel);
