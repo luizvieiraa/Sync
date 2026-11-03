@@ -2,3 +2,8 @@
 *.h text eol=lf
 *.sh text eol=lf
 Makefile text eol=lf
+# Preserva os bytes e sequencias de terminal do registro automatico.
+lhcv/evidencias.log -text -diff
+*.pdf binary
+*.tar binary
+*.png binary

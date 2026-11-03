@@ -293,3 +293,241 @@ OK: quantidade negativa rejeitada por assert (SIGABRT, retorno 134).
 9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  /mnt/c/Users/luizv/Downloads/sync_car-runner.c
 
 Script done on 2026-11-03 19:38:39-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-03 19:51:31-03:00 [COMMAND="set -ex; date; whoami; pwd; echo etapa_6_validacao_final; uname -sr; cat /etc/os-release; gcc --version; make --version; git log -5 --format=oneline; make clean; make; make test; sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c; sha256sum evidencias/*.png; make clean" <not executed on terminal>]
++ date
+Tue Nov  3 19:51:31 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo etapa_6_validacao_final
+etapa_6_validacao_final
++ uname -sr
+Linux 6.18.33.2-microsoft-standard-WSL2
++ cat /etc/os-release
+PRETTY_NAME="Ubuntu 26.04 LTS"
+NAME="Ubuntu"
+VERSION_ID="26.04"
+VERSION="26.04 (Resolute Raccoon)"
+VERSION_CODENAME=resolute
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=resolute
+LOGO=ubuntu-logo
++ gcc --version
+gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
++ make --version
+GNU Make 4.4.1
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
++ git log -5 --format=oneline
+[?1h=[33md63b24ef094ac190f7528b2c3e73862884ff84ad[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Etapa 5: adicionar Makef[m [33m[m[33m[m[1;36m[m[33m[m[1;32m[m[33m[mile e testes de sincronizacao[m
+[K[7mWaiting for data... (^X or interrupt to abort)[27m[K[33mcd96a8853e7c014d2270462a754c4fb37eab2261[m[33m ([m[1;31morigin/main[m[33m)[m Etapa 4: controlar chegad[m [33m[m[33m[m[1;31m[m[33m[ma e partida do carro[m
+[33m36d8ae8572ad05a88213d2b1082f776661c18629[m Etapa 3: confirmar embarque dos passage[m [33m[miros[m
+[33m9ac5cb2f1161f7935fcb36025067077462a9289a[m Etapa 2: adicionar runner e implementar[m [33m[m espera por vaga[m
+[33mc024e68ed6251b945f0226edd36191db41bdc74b[m Etapa 1: estrutura da estacao e inicial[m [33m[mizacao[m
+[K[?1l>+ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
++ make
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread   -c -o sync_car.o sync_car.c
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -Wno-unused-parameter   -c -o sync_car-runner.o sync_car-runner.c
+cc   sync_car.o sync_car-runner.o  -pthread -o sync_car
++ make test
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -I. tests/test_station.c sync_car.o -pthread -o tests/test_station
+./sync_car
+car entering station with 32 free seats
+car departed station with 32 new passenger(s) (expected 32)
+car entering station with 3 free seats
+car departed station with 3 new passenger(s) (expected 3)
+car entering station with 35 free seats
+car departed station with 35 new passenger(s) (expected 35)
+car entering station with 22 free seats
+car departed station with 22 new passenger(s) (expected 22)
+car entering station with 32 free seats
+car departed station with 8 new passenger(s) (expected 8)
+Looks good!
+./tests/test_station
+OK: 1 passageiros, 1 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 4 passageiros, 4 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 3 passageiros, 8 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 8 passageiros, 3 vagas; confirmacoes retidas ate reservar todas as vagas
+Todos os testes adicionais passaram.
+sh tests/test_invalid.sh
+test_station: sync_car.c:52: station_load_car: Assertion `count >= 0' failed.
+Aborted
+OK: quantidade negativa rejeitada por assert (SIGABRT, retorno 134).
++ sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  /mnt/c/Users/luizv/Downloads/sync_car-runner.c
++ sha256sum evidencias/erro_condicao.png evidencias/validacao_runner.png
+bab2c192062c8c048faa784598099fcee8f04f51b20305951110affdd02f1a89  evidencias/erro_condicao.png
+a2167f652c67bbf9cc587a3dd675e76e015c60220c54d082be07b29f96c8f84e  evidencias/validacao_runner.png
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
+
+Script done on 2026-11-03 19:51:33-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-03 19:55:01-03:00 [COMMAND="set -ex; date; whoami; pwd; echo etapa_6_reproducao_do_pacote_extraido; cd ../tmp/entrega-verificacao/lhcv; make clean; make; make test; make clean" <not executed on terminal>]
++ date
+Tue Nov  3 19:55:01 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo etapa_6_reproducao_do_pacote_extraido
+etapa_6_reproducao_do_pacote_extraido
++ cd ../tmp/entrega-verificacao/lhcv
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
++ make
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread   -c -o sync_car.o sync_car.c
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -Wno-unused-parameter   -c -o sync_car-runner.o sync_car-runner.c
+cc   sync_car.o sync_car-runner.o  -pthread -o sync_car
++ make test
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -I. tests/test_station.c sync_car.o -pthread -o tests/test_station
+./sync_car
+car entering station with 10 free seats
+car departed station with 10 new passenger(s) (expected 10)
+car entering station with 1 free seats
+car departed station with 1 new passenger(s) (expected 1)
+car entering station with 42 free seats
+car departed station with 42 new passenger(s) (expected 42)
+car entering station with 31 free seats
+car departed station with 31 new passenger(s) (expected 31)
+car entering station with 47 free seats
+car departed station with 16 new passenger(s) (expected 16)
+Looks good!
+./tests/test_station
+OK: 1 passageiros, 1 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 4 passageiros, 4 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 3 passageiros, 8 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 8 passageiros, 3 vagas; confirmacoes retidas ate reservar todas as vagas
+Todos os testes adicionais passaram.
+sh tests/test_invalid.sh
+test_station: sync_car.c:52: station_load_car: Assertion `count >= 0' failed.
+Aborted
+OK: quantidade negativa rejeitada por assert (SIGABRT, retorno 134).
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
+
+Script done on 2026-11-03 19:55:03-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-03 19:59:19-03:00 [COMMAND="set -ex; date; whoami; pwd; echo auditoria_pre_entrega_implementacao_5; cd ../tmp/auditoria-entrega-5/lhcv; make clean; make; make test; make clean" <not executed on terminal>]
++ date
+Tue Nov  3 19:59:19 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo auditoria_pre_entrega_implementacao_5
+auditoria_pre_entrega_implementacao_5
++ cd ../tmp/auditoria-entrega-5/lhcv
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
++ make
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread   -c -o sync_car.o sync_car.c
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -Wno-unused-parameter   -c -o sync_car-runner.o sync_car-runner.c
+cc   sync_car.o sync_car-runner.o  -pthread -o sync_car
++ make test
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -I. tests/test_station.c sync_car.o -pthread -o tests/test_station
+./sync_car
+car entering station with 46 free seats
+car departed station with 46 new passenger(s) (expected 46)
+car entering station with 45 free seats
+car departed station with 45 new passenger(s) (expected 45)
+car entering station with 2 free seats
+car departed station with 2 new passenger(s) (expected 2)
+car entering station with 45 free seats
+car departed station with 7 new passenger(s) (expected 7)
+Looks good!
+./tests/test_station
+OK: 1 passageiros, 1 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 4 passageiros, 4 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 3 passageiros, 8 vagas; confirmacoes retidas ate reservar todas as vagas
+OK: 8 passageiros, 3 vagas; confirmacoes retidas ate reservar todas as vagas
+Todos os testes adicionais passaram.
+sh tests/test_invalid.sh
+test_station: sync_car.c:52: station_load_car: Assertion `count >= 0' failed.
+Aborted
+OK: quantidade negativa rejeitada por assert (SIGABRT, retorno 134).
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o tests/test_station
+
+Script done on 2026-11-03 19:59:22-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-03 20:09:50-03:00 [COMMAND="set -ex; date; whoami; pwd; echo entrega_final_apenas_runner_professor; make clean; make; ./sync_car; sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c; make clean" <not executed on terminal>]
++ date
+Tue Nov  3 20:09:50 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo entrega_final_apenas_runner_professor
+entrega_final_apenas_runner_professor
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o
++ make
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread   -c -o sync_car.o sync_car.c
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -Wno-unused-parameter   -c -o sync_car-runner.o sync_car-runner.c
+cc   sync_car.o sync_car-runner.o  -pthread -o sync_car
++ ./sync_car
+car entering station with 5 free seats
+car departed station with 5 new passenger(s) (expected 5)
+car entering station with 31 free seats
+car departed station with 31 new passenger(s) (expected 31)
+car entering station with 10 free seats
+car departed station with 10 new passenger(s) (expected 10)
+car entering station with 36 free seats
+car departed station with 36 new passenger(s) (expected 36)
+car entering station with 2 free seats
+car departed station with 2 new passenger(s) (expected 2)
+car entering station with 45 free seats
+car departed station with 16 new passenger(s) (expected 16)
+Looks good!
++ sha256sum sync_car-runner.c /mnt/c/Users/luizv/Downloads/sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  sync_car-runner.c
+9597e03794b78aaa77f0219c5e5f91bf202c31b47e50ab5cc2fc192003129679  /mnt/c/Users/luizv/Downloads/sync_car-runner.c
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o
+
+Script done on 2026-11-03 20:09:52-03:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2026-11-03 20:10:15-03:00 [COMMAND="set -ex; date; whoami; pwd; echo reproducao_pacote_apenas_runner_professor; cd ../tmp/entrega-somente-professor/lhcv; make clean; make; ./sync_car; make clean" <not executed on terminal>]
++ date
+Tue Nov  3 20:10:15 -03 2026
++ whoami
+luizv
++ pwd
+/mnt/c/Users/luizv/Desktop/sync/lhcv
++ echo reproducao_pacote_apenas_runner_professor
+reproducao_pacote_apenas_runner_professor
++ cd ../tmp/entrega-somente-professor/lhcv
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o
++ make
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread   -c -o sync_car.o sync_car.c
+cc -std=gnu11 -Wall -Wextra -Werror -pedantic -pthread -Wno-unused-parameter   -c -o sync_car-runner.o sync_car-runner.c
+cc   sync_car.o sync_car-runner.o  -pthread -o sync_car
++ ./sync_car
+car entering station with 40 free seats
+car departed station with 40 new passenger(s) (expected 40)
+car entering station with 10 free seats
+car departed station with 10 new passenger(s) (expected 10)
+car entering station with 34 free seats
+car departed station with 34 new passenger(s) (expected 34)
+car entering station with 7 free seats
+car departed station with 7 new passenger(s) (expected 7)
+car entering station with 17 free seats
+car departed station with 9 new passenger(s) (expected 9)
+Looks good!
++ make clean
+rm -f sync_car sync_car.o sync_car-runner.o
+
+Script done on 2026-11-03 20:10:16-03:00 [COMMAND_EXIT_CODE="0"]
